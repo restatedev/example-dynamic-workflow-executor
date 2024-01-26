@@ -1,12 +1,25 @@
 import * as restate from "@restatedev/restate-sdk";
 import {WorkflowStep} from "../types/types";
+import Jimp from "jimp";
+import {TerminalError} from "@restatedev/restate-sdk";
 
-const run = async (ctx: restate.RpcContext, wf: WorkflowStep) => {
-    const rotateParams = wf.parameters as {angle: number};
-    const rotateParamsString = JSON.stringify(rotateParams);
-    console.info("Rotating image: " + wf.method + " parameters: " + rotateParamsString)
-    // do something
-    return "[Rotated image: " + wf.method + " parameters: " + rotateParamsString + "]";
+const run = async (ctx: restate.RpcContext, wfStep: WorkflowStep) => {
+    const rotateParams = wfStep.parameters as {angle: number};
+    console.info("Rotating image: " + wfStep.method + " parameters: " + JSON.stringify(rotateParams))
+
+    const image = await ctx.sideEffect(async () => {
+        try {
+            return await Jimp.read(wfStep.imgInputPath!);
+        }  catch (err) {
+            throw new TerminalError("Error reading image: " + err)
+        }
+    })
+    const rotatedImg = image.rotate(rotateParams.angle);
+    await ctx.sideEffect(() => rotatedImg.writeAsync(wfStep.imgOutputPath!));
+
+    return {
+        msg: "[Rotated image: " + wfStep.method + " parameters: " + JSON.stringify(rotateParams) + "]"
+    };
 };
 
 

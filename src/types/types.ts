@@ -1,6 +1,8 @@
 import {ServiceApi} from "@restatedev/restate-sdk";
 
 export type WorkflowStep = {
+    imgInputPath?: string;
+    imgOutputPath?: string;
     service: string;
     method: string;
     parameters: any;
@@ -10,7 +12,7 @@ export type WorkflowDefinition = {
     steps: Array<WorkflowStep>;
 }
 
-export type router = { run: (wf: WorkflowStep) => Promise<string>; }
+export type router = { run: (wf: WorkflowStep) => Promise<ProcessorOutput>; }
 
 // Any new workflow steps need to be added to this register
 // Maybe another data structure would be better
@@ -23,4 +25,9 @@ export type WorkflowStepProcessor = {
     processorType: ProcessorType,
     api: ServiceApi<router>,
     router: router
+}
+
+export type ProcessorOutput = {
+    msg: string;
+    output: any;
 }
