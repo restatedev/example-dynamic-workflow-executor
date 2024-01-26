@@ -97,4 +97,4 @@ async function executeWorkflowStep(ctx: restate.RpcContext, step: WorkflowStep){
 
 export const router = restate.router({ execute });
 export type api = typeof router;
-export const service: restate.ServiceApi<api> = { path: "stable-diffusion-transformer"}
+export const service: restate.ServiceApi<api> = { path: "workflow-executor" };

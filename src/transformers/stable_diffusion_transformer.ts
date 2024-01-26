@@ -21,9 +21,11 @@ const run = async (ctx: restate.RpcContext, wf: WorkflowStep) => {
 }
 
 async function transformImgWithStableDiffusion(ctx: restate.RpcContext, imgOutputPath: string, params: StableDiffusionParams) {
-    const request = await ctx.sideEffect(() => axios.post("http://127.0.0.1:7860/sdapi/v1/img2img", params));
-    let logoImage = await request.data.images[0];
-    const decodedImage: Buffer = Buffer.from(logoImage, "base64");
+    const tranformedImg = await ctx.sideEffect(async () => {
+        const request = await axios.post("http://127.0.0.1:7860/sdapi/v1/img2img", params)
+        return request.data.images[0];
+    });
+    const decodedImage: Buffer = Buffer.from(tranformedImg, "base64");
     await ctx.sideEffect(async () => fs.writeFileSync(imgOutputPath, decodedImage));
 }
 
