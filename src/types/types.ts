@@ -1,4 +1,3 @@
-import * as restate from "@restatedev/restate-sdk";
 import {ServiceApi} from "@restatedev/restate-sdk";
 
 export type WorkflowStep = {
@@ -13,7 +12,15 @@ export type WorkflowDefinition = {
 
 export type router = { run: (wf: WorkflowStep) => Promise<string>; }
 
-export type ServiceDefinition = {
+// Any new workflow steps need to be added to this register
+// Maybe another data structure would be better
+export enum ProcessorType {
+    SOURCE = "source",
+    TRANSFORMER = "transformer"
+}
+
+export type WorkflowStepProcessor = {
+    processorType: ProcessorType,
     api: ServiceApi<router>,
     router: router
 }
