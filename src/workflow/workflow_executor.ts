@@ -25,6 +25,11 @@ export const router = restate.router({
     }
 })
 
+export type api = typeof router;
+export const service: restate.ServiceApi<api> = { path: "workflow-executor" };
+
+// --------------------- Utils / helpers -------------------------------------
+
 function asValidatedWorkflowDefinition(jsonWf: string){
     let wfDefinition: WorkflowDefinition;
 
@@ -76,10 +81,7 @@ function addImgPathToSteps(wfDefinition: WorkflowDefinition, imgName: string) {
     return enrichedWfDefinition;
 }
 
-async function executeWorkflowStep(ctx: restate.RpcContext, step: WorkflowStep){
+function executeWorkflowStep(ctx: restate.RpcContext, step: WorkflowStep) {
     const servicePath = workflowStepRegistry.get(step.service)!;
-    return await ctx.rpc(servicePath.api).run(step);
+    return ctx.rpc(servicePath.api).run(step);
 }
-
-export type api = typeof router;
-export const service: restate.ServiceApi<api> = { path: "workflow-executor"} // the name of the service that serves the handlers
