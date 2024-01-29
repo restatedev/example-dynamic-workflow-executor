@@ -34,29 +34,40 @@ For example with `npx`:
 RESTATE_WORKER__INVOKER__INACTIVITY_TIMEOUT=1h npx @restatedev/restate-server@latest
 ```
 
-
-### Deploy the services
+### Deploy the services 
 
 Install the dependencies
 ```shell
 npm install 
 ```
 
-Run the services with ts-node-dev:
+Run puppeteer service:
 ```shell
-npm run app-dev
+npm run puppeteer-dev
 ```
 
-Or build and run the services with node:
+Run transformers service:
 ```shell
-npm run build
-npm run app
+npm run transformers-dev
+```
+
+Run stable diffusion service:
+```shell
+npm run stable-diffusion-dev
+```
+
+Run workflow service:
+```shell
+npm run workflow-dev
 ```
 
 Register the services at the Restate Server, using the CLI:
 
 ```shell
 restate dp reg localhost:9080
+restate dp reg localhost:9081
+restate dp reg localhost:9082
+restate dp reg localhost:9083
 ```
 
 ### OPTIONAL: Install and run stable diffusion server
@@ -84,8 +95,6 @@ cd stable-diffusion/stable-diffusion-webui
 
 For Linux installations, you may have to use the following options, in case you encounter errors:
 `export COMMANDLINE_ARGS="--skip-torch-cuda-test --precision full --no-half"`
-
-
 
 
 ## Example workflow execution requests

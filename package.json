@@ -10,7 +10,11 @@
     "bundle": "esbuild src/app.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js",
     "postbundle": "cd dist && zip -r index.zip index.js*",
     "app": "node ./dist/app.js",
-    "app-dev": "ts-node-dev --watch ./src --respawn --transpile-only ./src/app.ts"
+    "app-dev": "ts-node-dev --watch ./src --respawn --transpile-only ./src/app.ts",
+    "puppeteer-dev": "ts-node-dev --watch ./src --respawn --transpile-only src/puppeteer/puppeteer.ts",
+    "stable-diffusion-dev": "ts-node-dev --watch ./src --respawn --transpile-only src/stable-diffusion/stable_diffusion.ts",
+    "transformers-dev": "ts-node-dev --watch ./src --respawn --transpile-only src/transformers/transformers.ts",
+    "workflow-dev": "ts-node-dev --watch ./src --respawn --transpile-only src/workflow/workflow_executor.ts"
   },
   "dependencies": {
     "@restatedev/restate-sdk": "^0.7.0",
