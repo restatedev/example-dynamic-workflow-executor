@@ -1,5 +1,8 @@
 import express, { Request, Response } from "express";
 import axios from "axios";
+import axiosRetry from 'axios-retry';
+
+axiosRetry(axios, { retries: Infinity });
 
 const RESTATE_RUNTIME_ENDPOINT =
     process.env.RESTATE_RUNTIME_ENDPOINT || "http://localhost:8080";
