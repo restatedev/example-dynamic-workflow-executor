@@ -8,15 +8,16 @@ type StableDiffusionParams = {prompt: string, steps?: number}
 const run = async (ctx: restate.RpcContext, wf: WorkflowStep) => {
     const stableDiffusionParams = wf.parameters as StableDiffusionParams;
 
-    console.info("Generating image with stable diffusion: " + wf.method + " parameters: " + JSON.stringify(stableDiffusionParams))
+    console.info("Generating image with stable diffusion with parameters: " + JSON.stringify(stableDiffusionParams))
     await generateStableDiffusionImg(ctx, wf.imgOutputPath!, stableDiffusionParams);
 
     return {
-        msg: "[Generated stable diffusion image: " + wf.method + " parameters: " + JSON.stringify(stableDiffusionParams) + "]",
+        msg: "[Generated stable diffusion image with parameters: " + JSON.stringify(stableDiffusionParams) + "]",
     };
 }
 
 async function generateStableDiffusionImg(ctx: restate.RpcContext, imgOutputPath: string, params: StableDiffusionParams) {
+    // Would have been nicer to use awakeables here, if stable diffusion would support callbacks
     const generatedImg = await ctx.sideEffect(async () => {
         const request = await axios.post("http://127.0.0.1:7860/sdapi/v1/txt2img", params);
         return request.data.images[0];

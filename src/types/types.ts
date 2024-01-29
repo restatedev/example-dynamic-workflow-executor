@@ -4,7 +4,6 @@ export type WorkflowStep = {
     imgInputPath?: string;
     imgOutputPath?: string;
     service: string;
-    method: string;
     parameters: any;
 }
 

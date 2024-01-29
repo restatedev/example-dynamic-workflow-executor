@@ -5,7 +5,7 @@ import {TerminalError} from "@restatedev/restate-sdk";
 
 const run = async (ctx: restate.RpcContext, wfStep: WorkflowStep) => {
     const rotateParams = wfStep.parameters as {angle: number};
-    console.info("Rotating image: " + wfStep.method + " parameters: " + JSON.stringify(rotateParams))
+    console.info("Rotating image with parameters: " + JSON.stringify(rotateParams))
 
     const image = await ctx.sideEffect(async () => {
         try {
@@ -18,7 +18,7 @@ const run = async (ctx: restate.RpcContext, wfStep: WorkflowStep) => {
     await ctx.sideEffect(() => rotatedImg.writeAsync(wfStep.imgOutputPath!));
 
     return {
-        msg: "[Rotated image: " + wfStep.method + " parameters: " + JSON.stringify(rotateParams) + "]"
+        msg: "[Rotated image with parameters: " + JSON.stringify(rotateParams) + "]"
     };
 };
 

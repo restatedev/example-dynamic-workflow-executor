@@ -3,9 +3,10 @@ import {WorkflowStep} from "../types/types";
 import Jimp from "jimp";
 import {TerminalError} from "@restatedev/restate-sdk";
 
+
 const run = async (ctx: restate.RpcContext, wfStep: WorkflowStep) => {
     const blurParams = wfStep.parameters as {blur: number};
-    console.info("Blurring image: " + wfStep.method + " parameters: " + JSON.stringify(blurParams))
+    console.info("Blurring image with parameters: " + JSON.stringify(blurParams))
 
     const image = await ctx.sideEffect(async () => {
         try {
@@ -18,7 +19,7 @@ const run = async (ctx: restate.RpcContext, wfStep: WorkflowStep) => {
     await ctx.sideEffect(() => blurredImg.writeAsync(wfStep.imgOutputPath!));
 
     return {
-        msg: "[Blurred image: " + wfStep.method + " parameters: " + JSON.stringify(blurParams) + "]"
+        msg: "[Blurred image with parameters: " + JSON.stringify(blurParams) + "]"
     };
 };
 

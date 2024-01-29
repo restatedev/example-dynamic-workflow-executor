@@ -7,11 +7,11 @@ type PuppeteerParams = {url: string, viewport?: {width?: number, height?: number
 const run = async (ctx: restate.RpcContext, wf: WorkflowStep) => {
     const puppeteerParams = wf.parameters as PuppeteerParams;
 
-    console.info("Taking screenshot of website: " + wf.method + " parameters: " + JSON.stringify(puppeteerParams))
+    console.info("Taking screenshot of website with parameters: " + JSON.stringify(puppeteerParams))
     await ctx.sideEffect(async () => takeWebsiteScreenshot(ctx, wf.imgOutputPath!, puppeteerParams));
 
     return {
-        msg: "[Took screenshot of website: " + wf.method + " parameters: " + JSON.stringify(puppeteerParams) + "]",
+        msg: "[Took screenshot of website with parameters: " + JSON.stringify(puppeteerParams) + "]",
     };
 }
 

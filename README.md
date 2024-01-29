@@ -95,39 +95,45 @@ Here is  list of example workflow execution requests that you can send to the wo
 Puppeteer screenshot -> rotate -> blur:
 
 ```shell
-curl localhost:8080/workflow-executor/execute -H 'content-type: application/json' -d '{"request":"{\"steps\":[{\"service\":\"puppeteer-service\",\"method\":\"rotate\",\"parameters\":{\"url\":\"https://restate.dev\"}},{\"service\":\"rotate-img-service\",\"method\":\"rotate\",\"parameters\":{\"angle\":90}},{\"service\":\"blur-img-service\",\"method\":\"radial-blur\",\"parameters\":{\"blur\":5}}]}"}'
+curl localhost:8080/workflow-executor/execute -H 'content-type: application/json' -d '{"request":"{\"steps\":[{\"service\":\"puppeteer-service\",\"parameters\":{\"url\":\"https://restate.dev\"}},{\"service\":\"rotate-img-service\",\"parameters\":{\"angle\":90}},{\"service\":\"blur-img-service\",\"parameters\":{\"blur\":5}}]}"}'
 ```
 
 Puppeteer screenshot -> stable diffusion -> rotate -> blur:
 
 ```shell
-curl localhost:8080/workflow-executor/execute -H 'content-type: application/json' -d '{"request":"{\"steps\":[{\"service\":\"puppeteer-service\",\"method\":\"rotate\",\"parameters\":{\"url\":\"https://restate.dev\"}},{\"service\":\"stable-diffusion-transformer\",\"method\":\"rotate\",\"parameters\":{\"prompt\":\"Change the colors to black background and pink font\", \"steps\":25}},{\"service\":\"rotate-img-service\",\"method\":\"rotate\",\"parameters\":{\"angle\":90}},{\"service\":\"blur-img-service\",\"method\":\"radial-blur\",\"parameters\":{\"blur\":5}}]}"}' | jq .
+curl localhost:8080/workflow-executor/execute -H 'content-type: application/json' -d '{"request":"{\"steps\":[{\"service\":\"puppeteer-service\",\"parameters\":{\"url\":\"https://restate.dev\"}},{\"service\":\"stable-diffusion-transformer\",\"parameters\":{\"prompt\":\"Change the colors to black background and pink font\", \"steps\":25}},{\"service\":\"rotate-img-service\",\"parameters\":{\"angle\":90}},{\"service\":\"blur-img-service\",\"parameters\":{\"blur\":5}}]}"}' | jq .
 ```
 
-Stable diffusion generation -> rotate -> blur:
+Stable diffusion generation (15 steps) -> rotate -> blur:
 
 ```shell
-curl localhost:8080/workflow-executor/execute -H 'content-type: application/json' -d '{"request":"{\"steps\":[{\"service\":\"stable-diffusion-generator\",\"method\":\"rotate\",\"parameters\":{\"prompt\":\"A sunny beach\", \"steps\":15}},{\"service\":\"rotate-img-service\",\"method\":\"rotate\",\"parameters\":{\"angle\":90}},{\"service\":\"blur-img-service\",\"method\":\"radial-blur\",\"parameters\":{\"blur\":5}}]}"}'
+curl localhost:8080/workflow-executor/execute -H 'content-type: application/json' -d '{"request":"{\"steps\":[{\"service\":\"stable-diffusion-generator\",\"parameters\":{\"prompt\":\"A sunny beach\", \"steps\":15}},{\"service\":\"rotate-img-service\",\"parameters\":{\"angle\":90}},{\"service\":\"blur-img-service\",\"parameters\":{\"blur\":5}}]}"}'
 ```
 
-Stable diffusion generation -> stable diffusion transformation -> rotate -> blur:
+Stable diffusion generation (1 step) -> stable diffusion transformation (1 step) -> rotate -> blur:
 
 ```shell
-curl localhost:8080/workflow-executor/execute -H 'content-type: application/json' -d '{"request":"{\"steps\":[{\"service\":\"stable-diffusion-generator\",\"method\":\"rotate\",\"parameters\":{\"prompt\":\"A sunny beach\", \"steps\":15}},{\"service\":\"stable-diffusion-transformer\",\"method\":\"rotate\",\"parameters\":{\"prompt\":\"Make it snow on this sunny beach image\", \"steps\":15}},{\"service\":\"rotate-img-service\",\"method\":\"rotate\",\"parameters\":{\"angle\":90}},{\"service\":\"blur-img-service\",\"method\":\"radial-blur\",\"parameters\":{\"blur\":5}}]}"}'
+curl localhost:8080/workflow-executor/execute -H 'content-type: application/json' -d '{"request":"{\"steps\":[{\"service\":\"stable-diffusion-generator\",\"parameters\":{\"prompt\":\"A sunny beach\", \"steps\":1}},{\"service\":\"stable-diffusion-transformer\",\"parameters\":{\"prompt\":\"Make it snow on this sunny beach image\", \"steps\":1}},{\"service\":\"rotate-img-service\",\"parameters\":{\"angle\":90}},{\"service\":\"blur-img-service\",\"parameters\":{\"blur\":5}}]}"}'
+```
+
+Stable diffusion generation (15 steps) -> stable diffusion transformation (15 steps) -> rotate -> blur:
+
+```shell
+curl localhost:8080/workflow-executor/execute -H 'content-type: application/json' -d '{"request":"{\"steps\":[{\"service\":\"stable-diffusion-generator\",\"parameters\":{\"prompt\":\"A sunny beach\", \"steps\":15}},{\"service\":\"stable-diffusion-transformer\",\"parameters\":{\"prompt\":\"Make it snow on this sunny beach image\", \"steps\":15}},{\"service\":\"rotate-img-service\",\"parameters\":{\"angle\":90}},{\"service\":\"blur-img-service\",\"parameters\":{\"blur\":5}}]}"}'
 ```
 
 
 Puppeteer screenshot -> blur -> rotate -> rotate -> rotate -> rotate:
 
 ```shell
-curl localhost:8080/workflow-executor/execute -H 'content-type: application/json' -d '{"request":"{\"steps\":[{\"service\":\"puppeteer-service\",\"method\":\"rotate\",\"parameters\":{\"url\":\"https://restate.dev\"}},{\"service\":\"blur-img-service\",\"method\":\"radial-blur\",\"parameters\":{\"blur\":5}}, {\"service\":\"rotate-img-service\",\"method\":\"rotate\",\"parameters\":{\"angle\":90}}, {\"service\":\"rotate-img-service\",\"method\":\"rotate\",\"parameters\":{\"angle\":90}}, {\"service\":\"rotate-img-service\",\"method\":\"rotate\",\"parameters\":{\"angle\":90}}, {\"service\":\"rotate-img-service\",\"method\":\"rotate\",\"parameters\":{\"angle\":90}}]}"}' 
+curl localhost:8080/workflow-executor/execute -H 'content-type: application/json' -d '{"request":"{\"steps\":[{\"service\":\"puppeteer-service\",\"parameters\":{\"url\":\"https://restate.dev\"}},{\"service\":\"blur-img-service\",\"parameters\":{\"blur\":5}}, {\"service\":\"rotate-img-service\",\"parameters\":{\"angle\":90}}, {\"service\":\"rotate-img-service\",\"parameters\":{\"angle\":90}}, {\"service\":\"rotate-img-service\",\"parameters\":{\"angle\":90}}, {\"service\":\"rotate-img-service\",\"parameters\":{\"angle\":90}}]}"}' 
 ```
 
 
 Invalid workflow definition:
 
 ```shell
-curl localhost:8080/workflow-executor/execute -H 'content-type: application/json' -d '{"request":"{\"steps\":[{\"service\":\"rotate-img-service\",\"method\":\"rotate\",\"parameters\":{\"angle\":90}},{\"service\":\"blur-img-service\",\"method\":\"radial-blur\",\"parameters\":{\"blur\":5}}]}"}'
+curl localhost:8080/workflow-executor/execute -H 'content-type: application/json' -d '{"request":"{\"steps\":[{\"service\":\"rotate-img-service\",\"parameters\":{\"angle\":90}},{\"service\":\"blur-img-service\",\"parameters\":{\"blur\":5}}]}"}'
 ```
 
 
