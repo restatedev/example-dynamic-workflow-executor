@@ -1,23 +1,23 @@
 import * as restate from "@restatedev/restate-sdk";
-import {WorkflowStep} from "../types/types";
+import { WorkflowStep } from "../types/types";
 import axios from "axios";
 import * as fs from "fs";
 import Jimp from "jimp";
 
-type StableDiffusionParams = {prompt: string, steps?: number}
+type StableDiffusionParams = { prompt: string, steps?: number }
 
 export const router = restate.router({
     run: async (ctx: restate.RpcContext, wf: WorkflowStep) => {
         const prompt = wf.parameters as { prompt: string };
         const image = await Jimp.read(wf.imgInputPath!)
         const base64EncodedImg = (await image.getBufferAsync(Jimp.MIME_PNG)).toString('base64')
-        const stableDiffusionParams = {...prompt, init_images: [base64EncodedImg]};
+        const stableDiffusionParams = { ...prompt, init_images: [base64EncodedImg] };
 
-        console.info("Generating image with stable diffusion with parameters: " + JSON.stringify(prompt))
+        console.info("Transforming image with stable diffusion with parameters: " + JSON.stringify(prompt))
         await transformImgWithStableDiffusion(ctx, wf.imgOutputPath!, stableDiffusionParams)
 
         return {
-            msg: "[Generated stable diffusion image with parameters: " + JSON.stringify(prompt) + "]",
+            msg: "[Transformed stable diffusion image with parameters: " + JSON.stringify(prompt) + "]",
         };
     }
 })
@@ -34,4 +34,4 @@ async function transformImgWithStableDiffusion(ctx: restate.RpcContext, imgOutpu
 
 
 export type api = typeof router;
-export const service: restate.ServiceApi<api> = { path: "stable-diffusion-transformer"}
+export const service: restate.ServiceApi<api> = { path: "stable-diffusion-transformer" }
