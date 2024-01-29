@@ -23,6 +23,7 @@
     "axios": "^1.6.7"
   },
   "devDependencies": {
+    "@restatedev/restate": "^0.7.0",
     "ts-node-dev": "^1.1.1",
     "typescript": "^5.0.2",
     "esbuild": "^0.18.12"
