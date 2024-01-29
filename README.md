@@ -23,15 +23,9 @@ Here is an overview of the services:
 
 ### Deploy Restate Server
 
-
-The side effects that call stable diffusion can run for more than one minute. This is longer than the inactivity timeout of the Restate Server.
-Therefore, you need to run the Restate Server with a longer inactivity timeout.
-
-You need to run Restate with: `RESTATE_WORKER__INVOKER__INACTIVITY_TIMEOUT=1h`
-
-For example with `npx`:
+Start the restate server via `npx`:
 ```shell
-RESTATE_WORKER__INVOKER__INACTIVITY_TIMEOUT=1h npx @restatedev/restate-server@latest
+npx @restatedev/restate-server@latest
 ```
 
 ### Deploy the services 
@@ -54,6 +48,11 @@ npm run transformers-dev
 Run stable diffusion service:
 ```shell
 npm run stable-diffusion-dev
+```
+
+Run external stable diffusion service:
+```shell
+npm run external-stable-diffusion-dev
 ```
 
 Run workflow service:
