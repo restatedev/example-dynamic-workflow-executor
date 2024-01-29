@@ -8,7 +8,14 @@ export type WorkflowStep = {
 }
 
 export type WorkflowDefinition = {
+    id: string;
     steps: Array<WorkflowStep>;
+}
+
+export type WorfklowStatus = {
+    status: string;
+    output: string[];
+    imgName: string;
 }
 
 export type router = { run: (wf: WorkflowStep) => Promise<ProcessorOutput>; }

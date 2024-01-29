@@ -1,5 +1,6 @@
-import {ProcessorType, WorkflowDefinition, WorkflowStep } from "../types/types";
+import {ProcessorType, WorfklowStatus, WorkflowDefinition, WorkflowStep} from "../types/types";
 import * as restate from "@restatedev/restate-sdk";
+import * as workflowStatus from "./workflow_status";
 import {TerminalError} from "@restatedev/restate-sdk";
 import {workflowStepRegistry} from "./workflow_step_registry";
 
@@ -11,17 +12,17 @@ export const router = restate.router({
         const imgName = ctx.rand.uuidv4();
         const wf = addImgPathToSteps(wfDefinition, imgName);
 
-        let processorMessages: string[] = [];
+        let status = {status: "Processing", imgName, output: []} as WorfklowStatus;
         for (const step of wf.steps) {
             const result = await executeWorkflowStep(ctx, step);
-            processorMessages.push(result.msg);
+            status.output.push(result.msg);
+
+            ctx.send(workflowStatus.service).update(wf.id, status);
         }
 
-        return {
-            status: "Image transformed!",
-            steps: processorMessages,
-            imgStoragePath: imgName
-        };
+        status.status = "Finished";
+        ctx.send(workflowStatus.service).update(wf.id, status);
+        return status;
     }
 })
 
@@ -84,4 +85,8 @@ function addImgPathToSteps(wfDefinition: WorkflowDefinition, imgName: string) {
 function executeWorkflowStep(ctx: restate.RpcContext, step: WorkflowStep) {
     const servicePath = workflowStepRegistry.get(step.service)!;
     return ctx.rpc(servicePath.api).run(step);
+}
+
+function updateWorkflowStatus() {
+
 }

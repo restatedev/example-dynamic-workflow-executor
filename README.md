@@ -104,7 +104,12 @@ Here is  list of example workflow execution requests that you can send to the wo
 Puppeteer screenshot -> rotate -> blur:
 
 ```shell
-curl localhost:8080/workflow-executor/execute -H 'content-type: application/json' -d '{"request":"{\"steps\":[{\"service\":\"puppeteer-service\",\"parameters\":{\"url\":\"https://restate.dev\"}},{\"service\":\"rotate-img-service\",\"parameters\":{\"angle\":90}},{\"service\":\"blur-img-service\",\"parameters\":{\"blur\":5}}]}"}'
+curl localhost:8080/workflow-executor/execute -H 'idempotency-key: user123-wf7' -H 'content-type: application/json' -d '{"request":"{\"id\":\"user123-wf7\",\"steps\":[{\"service\":\"puppeteer-service\",\"parameters\":{\"url\":\"https://restate.dev\"}},{\"service\":\"rotate-img-service\",\"parameters\":{\"angle\":90}},{\"service\":\"blur-img-service\",\"parameters\":{\"blur\":5}}]}"}'
+```
+
+
+```shell
+curl localhost:8080/workflow-status/get -H 'content-type: application/json' -d '{"key":"user123-wf1"}'
 ```
 
 Puppeteer screenshot -> stable diffusion -> rotate -> blur:
