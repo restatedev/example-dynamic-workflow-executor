@@ -5,7 +5,7 @@ import * as rotateImgService from "../transformers/rotate_img_service";
 import * as blurImgService from "../transformers/blur_img_service";
 import * as stableDiffusionTransformer from "../stable-diffusion/stable_diffusion_transformer";
 
-const workflowStepRegistry = new Map<string, WorkflowStepProcessor>([
+export const workflowStepRegistry = new Map<string, WorkflowStepProcessor>([
     //sources
     ["puppeteer-service", {processorType: ProcessorType.SOURCE, api: puppeteer.service} as WorkflowStepProcessor],
     ["stable-diffusion-generator", {processorType: ProcessorType.SOURCE, api: stableDiffusionGenerator.service} as WorkflowStepProcessor],

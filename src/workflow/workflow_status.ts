@@ -9,4 +9,4 @@ export const router = restate.router({
 
 
 export type api = typeof router;
-export const service: restate.ServiceApi<api> = { path: "workflow-executor"} // the name of the service that serves the handlers
+export const service: restate.ServiceApi<api> = { path: "workflow-status"} // the name of the service that serves the handlers

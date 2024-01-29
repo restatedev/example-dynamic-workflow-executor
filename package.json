@@ -14,7 +14,7 @@
     "puppeteer-dev": "ts-node-dev --watch ./src --respawn --transpile-only src/puppeteer/puppeteer.ts",
     "stable-diffusion-dev": "ts-node-dev --watch ./src --respawn --transpile-only src/stable-diffusion/stable_diffusion.ts",
     "transformers-dev": "ts-node-dev --watch ./src --respawn --transpile-only src/transformers/transformers.ts",
-    "workflow-dev": "ts-node-dev --watch ./src --respawn --transpile-only src/workflow/workflow_executor.ts"
+    "workflow-dev": "ts-node-dev --watch ./src --respawn --transpile-only src/workflow/workflow.ts"
   },
   "dependencies": {
     "@restatedev/restate-sdk": "^0.7.0",
