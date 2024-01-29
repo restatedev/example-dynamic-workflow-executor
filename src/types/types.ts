@@ -22,8 +22,7 @@ export enum ProcessorType {
 
 export type WorkflowStepProcessor = {
     processorType: ProcessorType,
-    api: ServiceApi<router>,
-    router: router
+    api: ServiceApi<router>
 }
 
 export type ProcessorOutput = {
