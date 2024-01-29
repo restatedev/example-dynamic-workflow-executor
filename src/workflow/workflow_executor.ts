@@ -1,7 +1,10 @@
-import {ProcessorType, WorkflowDefinition, WorkflowStep } from "../types/types";
+import { ProcessorType, WorkflowDefinition, WorkflowStep } from "../types/types";
 import * as restate from "@restatedev/restate-sdk";
-import {TerminalError} from "@restatedev/restate-sdk";
-import {workflowStepRegistry} from "./workflow_step_registry";
+import { TerminalError } from "@restatedev/restate-sdk";
+import { workflowStepRegistry } from "./workflow_step_registry";
+
+const fs = require('fs');
+const outputDirectory = "generated-images";
 
 const router = restate.router({
     execute: async (ctx: restate.RpcContext, jsonWf: string) => {
@@ -25,7 +28,7 @@ const router = restate.router({
     }
 })
 
-function asValidatedWorkflowDefinition(jsonWf: string){
+function asValidatedWorkflowDefinition(jsonWf: string) {
     let wfDefinition: WorkflowDefinition;
 
     // Check if valid JSON
@@ -36,26 +39,26 @@ function asValidatedWorkflowDefinition(jsonWf: string){
     }
 
     // Check if workflow definition has steps
-    if(!wfDefinition.steps) {
+    if (!wfDefinition.steps) {
         throw new TerminalError("Invalid workflow definition: no steps defined");
     }
 
     // Check if workflow steps are valid
     wfDefinition.steps.forEach(step => {
-        if(!workflowStepRegistry.has(step.service)) {
+        if (!workflowStepRegistry.has(step.service)) {
             new TerminalError(`Invalid workflow definition: Service ${step.service} not found`)
         }
     })
 
     // First element needs to contain a image file path or be a source
     const firstStep = wfDefinition.steps[0];
-    if(workflowStepRegistry.get(firstStep.service)!.processorType !== ProcessorType.SOURCE && !firstStep.imgInputPath) {
+    if (workflowStepRegistry.get(firstStep.service)!.processorType !== ProcessorType.SOURCE && !firstStep.imgInputPath) {
         throw new TerminalError(`Invalid workflow definition: First step must be a source or contain an image file path`)
     }
 
     // Other elements should be transformers
     wfDefinition.steps.slice(1).forEach(step => {
-        if(workflowStepRegistry.get(step.service)!.processorType !== ProcessorType.TRANSFORMER) {
+        if (workflowStepRegistry.get(step.service)!.processorType !== ProcessorType.TRANSFORMER) {
             throw new TerminalError(`Invalid workflow definition: Step ${step.service} must be a transformer`)
         }
     })
@@ -64,19 +67,25 @@ function asValidatedWorkflowDefinition(jsonWf: string){
 }
 
 function addImgPathToSteps(wfDefinition: WorkflowDefinition, imgName: string) {
-    const enrichedWfDefinition = {...wfDefinition};
+    if (!fs.existsSync(outputDirectory)) {
+        // ensure that the output directory exists
+        fs.mkdirSync(outputDirectory);
+    }
+
+    const enrichedWfDefinition = { ...wfDefinition };
     enrichedWfDefinition.steps = wfDefinition.steps.map((step, index) => {
         // If it's the first step, and it already contains an input path then just take the raw input, otherwise take the output path of the previous step as input path
-        const imgInputPath = index === 0 ? step.imgInputPath : `generated-images/${imgName}-${index - 1}.png`;
-        return {...step,
+        const imgInputPath = index === 0 ? step.imgInputPath : `${outputDirectory}/${imgName}-${index - 1}.png`;
+        return {
+            ...step,
             imgInputPath: imgInputPath,
-            imgOutputPath: `generated-images/${imgName}-${index}.png`
+            imgOutputPath: `${outputDirectory}/${imgName}-${index}.png`
         }
     })
     return enrichedWfDefinition;
 }
 
-async function executeWorkflowStep(ctx: restate.RpcContext, step: WorkflowStep){
+async function executeWorkflowStep(ctx: restate.RpcContext, step: WorkflowStep) {
     const servicePath = workflowStepRegistry.get(step.service)!;
     return await ctx.rpc(servicePath.api).run(step);
 }
