@@ -3,7 +3,7 @@ import * as restate from "@restatedev/restate-sdk";
 import {TerminalError} from "@restatedev/restate-sdk";
 import {workflowStepRegistry} from "./workflow_step_registry";
 
-const router = restate.router({
+export const router = restate.router({
     execute: async (ctx: restate.RpcContext, jsonWf: string) => {
         const wfDefinition = asValidatedWorkflowDefinition(jsonWf);
 
@@ -81,7 +81,5 @@ async function executeWorkflowStep(ctx: restate.RpcContext, step: WorkflowStep){
     return await ctx.rpc(servicePath.api).run(step);
 }
 
-restate
-    .createServer()
-    .bindRouter("workflow-executor", router)
-    .listen(9080);
+export type api = typeof router;
+export const service: restate.ServiceApi<api> = { path: "workflow-executor"} // the name of the service that serves the handlers
